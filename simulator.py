@@ -11,7 +11,7 @@ except ImportError:
     print("This script requires paho-mqtt. Install with: pip install paho-mqtt")
     raise
 
-BROKER_HOST = os.getenv("MQTT_HOST", "localhost")
+BROKER_HOST = os.getenv("MQTT_HOST", "orangepipcplus")
 BROKER_PORT = int(os.getenv("MQTT_PORT", "1883"))
 TOPIC = os.getenv("MQTT_TOPIC", "lab/bench/bench01/telemetry")
 INTERVAL = float(os.getenv("PUB_INTERVAL", "2"))  # seconds
