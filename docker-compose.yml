@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mosquitto:
-    image: thinkboxas/core-mosquitto:v2-armv7
+    image: eclipse-mosquitto:latest
     container_name: mosquitto
     restart: unless-stopped
     ports:
@@ -14,7 +14,7 @@ services:
       - mosquitto-log:/mosquitto/log
 
   influxdb:
-    image: arm32v7/influxdb
+    image: influxdb:1.8.4
     container_name: influxdb
     restart: unless-stopped
     ports:
@@ -29,7 +29,7 @@ services:
       - ./influxdb-init.iql:/docker-entrypoint-initdb.d/init.iql:ro
 
   telegraf:
-    image: arm32v7/telegraf
+    image: telegraf
     container_name: telegraf
     restart: unless-stopped
     volumes:
