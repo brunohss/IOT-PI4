@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   mosquitto:
-    image: thinkboxas/core-mosquitto
+    image: thinkboxas/core-mosquitto:v2-armv7
     container_name: mosquitto
     restart: unless-stopped
     ports:
