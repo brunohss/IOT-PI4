@@ -24,7 +24,7 @@ Ele utiliza o ESP32‑S3 para coleta de dados, MQTT para comunicação em tempo 
 
 1. **Clone o repositório**
 ```bash
-git clone -b Back-ARM32V7 https://github.com/brunohss/IOT---PI4.git
+git clone -b Back-AMD64 https://github.com/brunohss/IOT---PI4.git
 cd IOT---PI4
 ```
 2. Inicialize os serviços com Docker Compose na pasta do repositório
@@ -61,7 +61,9 @@ docker logs influxdb
 
     No seu host:
 ```bash
-cd iot-bench-env
+cd iot---PI4
+python -m venv simulador
+./simulador/Scripts/Activate #.ps1 se no windows
 pip install paho-mqtt
 python simulator.py
 ```
