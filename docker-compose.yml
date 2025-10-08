@@ -27,7 +27,17 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb
       - ./influxdb-init.iql:/docker-entrypoint-initdb.d/init.iql:ro
-
+  grafana:
+     image: grafana/grafana
+     container_name: grafana
+     restart: unless-stopped
+     ports:
+       - "3000:3000"
+     volumes:
+       - ./grafana-provisioning:/etc/grafana/provisioning:ro
+       - grafana-data:/var/lib/grafana
+     depends_on:
+       - influxdb
   telegraf:
     image: telegraf
     container_name: telegraf
