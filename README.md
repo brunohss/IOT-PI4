@@ -61,7 +61,10 @@ docker logs influxdb
 
     No seu host:
 ```bash
-cd iot-bench-env
+cd iot---PI4
+python -m venv simulador
+./simulador/Scripts/Activate.ps1 se no windows
+./simulador/bin/activate se no linux
 pip install paho-mqtt
 python simulator.py
 ```
