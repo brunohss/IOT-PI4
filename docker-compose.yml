@@ -24,6 +24,7 @@ services:
       - INFLUXDB_ADMIN_USER=bhassist
       - INFLUXDB_ADMIN_PASSWORD=bhassist
       - INFLUXDB_HTTP_AUTH_ENABLED=true
+      - INFLUXDB_HTTP_FLUX_ENABLED=true
     volumes:
       - influxdb-data:/var/lib/influxdb
       - ./influxdb-init.iql:/docker-entrypoint-initdb.d/init.iql:ro
@@ -34,7 +35,7 @@ services:
      ports:
        - "3000:3000"
      volumes:
-       - ./grafana-provisioning:/etc/grafana/provisioning:ro
+       - ./grafana-provisioning:/etc/grafana/provisioning:rw
        - grafana-data:/var/lib/grafana
      depends_on:
        - influxdb
