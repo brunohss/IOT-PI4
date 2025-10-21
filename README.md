@@ -39,7 +39,7 @@ Recomenda-se também a instalação do Portainer-ce
 1. **Clone o repositório do Back-End (este) e entre na pasta**
 
 ```bash
-git clone -b Back-AMD64 https://github.com/brunohss/IOT---PI4.git
+git clone -b Back-ARM32V7 https://github.com/brunohss/IOT---PI4.git
 cd IOT---PI4
 ```
 
