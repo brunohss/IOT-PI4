@@ -1,18 +1,40 @@
 version: "3.8"
 
 services:
-  mosquitto:
-    image: thinkboxas/core-mosquitto:v2-armv7
-    container_name: mosquitto
-    restart: unless-stopped
+#Proxy reverso NGINX para lidar com redirecionamentos e CORS
+  nginx:
+    image: arm32v7/nginx:latest
+    container_name: nginx
     ports:
-      - "1883:1883"
-      - "9001:9001"
+      - "5173:8080"
+      - "8084:8084"
     volumes:
-      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
-      - mosquitto-data:/mosquitto/data
-      - mosquitto-log:/mosquitto/log
-
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    network_mode: "host"
+#Front-end do projeto, encapsulado em um container node.js oficial, customizado no momento da composição
+  frontend-bh:
+    image: frontend-bh
+    container_name: frontend-bh
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      - NODE_ENV=development
+      - VITE_INFLUX_URL=http://localhost:8084
+      - VITE_INFLUX_USER=bhassist
+      - VITE_INFLUX_PASSWORD=bhassist
+      - VITE_INFLUX_BUCKET=iot/autogen
+      - VITE_AUTH0_DOMAIN=dev-rqp1b0m06yswm43u.us.auth0.com
+      - VITE_AUTH0_CLIENT_ID=xXZs9oM1kxJmH7fda7ojIfFbjbYdqTtO
+      - VITE_AUTH0_REDIRECT_URI=http://localhost:5173
+      - VITE_AUTH0_CLIENT_SECRET=eCImDTEmV9aluYN8llHpCXe037yrV9XTu98ew0Y6POnKJtsODRcWqlGKjLweM1u_
+    ports:
+      - "5176:5173"
+    depends_on:
+      - influxdb
+      - nginx
+    network_mode: "host"
+#Container do InfluxDB 1.8.4 para compatibilidade com a imagem mais recente disponível para Arquitetura Armv7
   influxdb:
     image: arm32v7/influxdb
     container_name: influxdb
@@ -28,7 +50,19 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb
       - ./influxdb-init.iql:/docker-entrypoint-initdb.d/init.iql:ro
-
+#Coordenador MQTT para coleta dos dados
+  mosquitto:
+    image: thinkboxas/core-mosquitto:v2-armv7
+    container_name: mosquitto
+    restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
+    volumes:
+      - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - mosquitto-data:/mosquitto/data
+      - mosquitto-log:/mosquitto/log
+#Serviço de integração de APIs de entrada do InfluxDB
   telegraf:
     image: arm32v7/telegraf
     container_name: telegraf
@@ -38,6 +72,7 @@ services:
     depends_on:
       - mosquitto
       - influxdb
+
 volumes:
   influxdb-data:
   mosquitto-data:
