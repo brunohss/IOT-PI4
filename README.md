@@ -64,3 +64,5 @@ python simulator.py
    Ele publica a cada 2s no tópico lab/bench/bench01/telemetry (JSON com temp, hum, lux, noise_db, co2, voc, pm25, pm10).
 
 6. Acesse o Front-End rodando em http://localhost:5173
+
+7. Para acessar o ambiente de desenvolvimento do front-end, use o Visual Studio Code, instale a extensão "Dev Container" e acesse a Aba Container na Barra lateral esquerda, escolhendo o Container "frontend-bh", neste contida a pasta de trabalho do Front-end, também chamada /frontend-bh/
