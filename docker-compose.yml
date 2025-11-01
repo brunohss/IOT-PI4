@@ -5,15 +5,20 @@ services:
   nginx:
     image: arm32v7/nginx:latest
     container_name: nginx
+    ports:
+     - "5173:8080"
+     - "8084:8084"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-    network_mode: 'host'
+#    network_mode: 'host'
     depends_on:
-      - influxdb
+      - frontend-bh
 #Front-end do projeto, encapsulado em um container node.js oficial, customizado no momento da composição
   frontend-bh:
     image: frontend-bh
     container_name: frontend-bh
+    ports:
+      - "5176:5173"
     build:
       context: ./
       dockerfile: Dockerfile
@@ -23,7 +28,11 @@ services:
       - VITE_INFLUX_USER=frontend
       - VITE_INFLUX_PASSWORD=bhassist
       - VITE_INFLUX_BUCKET=iot/autogen
-    network_mode: 'host'
+      - VITE_AUTH0_DOMAIN=dev-rqp1b0m06yswm43u.us.auth0.com
+      - VITE_AUTH0_CLIENT_ID=xXZs9oM1kxJmH7fda7ojIfFbjbYdqTtO
+      - VITE_AUTH0_REDIRECT_URI=http://localhost:5173
+      - VITE_AUTH0_CLIENT_SECRET=eCImDTEmV9aluYN8llHpCXe037yrV9XTu98ew0Y6POnKJtsODRcWqlGKjLweM1u_
+#    network_mode: 'host'
     depends_on:
       - influxdb
 #Container do InfluxDB 1.8.10 para compatibilidade com a imagem mais recente disponível para Arquitetura Armv7
@@ -31,6 +40,8 @@ services:
     image: arm32v7/influxdb:1.8.10
     container_name: influxdb
     restart: unless-stopped
+    ports:
+      - "8086:8086"
     environment:
       - INFLUXDB_DB=iot
       - INFLUXDB_ADMIN_USER=bhassist
@@ -46,18 +57,20 @@ services:
       - ./init-influxdb.sh:/init-influxdb.sh:ro
       - influxdb-data:/var/lib/influxdb
       - ./influxdb-init.iql:/docker-entrypoint-initdb.d/init.iql:ro
-    network_mode: 'host'
+#    network_mode: 'host'
 
 #Coordenador MQTT para coleta dos dados
   mosquitto:
     image: thinkboxas/core-mosquitto:v2-armv7
     container_name: mosquitto
     restart: unless-stopped
+    ports:
+      - "1883:1883"
+      - "9001:9001"
     volumes:
       - ./mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
       - mosquitto-data:/mosquitto/data
       - mosquitto-log:/mosquitto/log
-    network_mode: 'host'
 #Serviço de integração de APIs de entrada do InfluxDB
   telegraf:
     image: arm32v7/telegraf
@@ -68,7 +81,6 @@ services:
     depends_on:
       - mosquitto
       - influxdb
-    network_mode: 'host'
 
 volumes:
   influxdb-data:
