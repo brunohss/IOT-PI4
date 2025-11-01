@@ -30,7 +30,7 @@ services:
       - VITE_INFLUX_BUCKET=iot/autogen
       - VITE_AUTH0_DOMAIN=dev-rqp1b0m06yswm43u.us.auth0.com
       - VITE_AUTH0_CLIENT_ID=xXZs9oM1kxJmH7fda7ojIfFbjbYdqTtO
-      - VITE_AUTH0_REDIRECT_URI=https://localhost:5173
+      - VITE_AUTH0_REDIRECT_URI=https://localhost
       - VITE_AUTH0_CLIENT_SECRET=eCImDTEmV9aluYN8llHpCXe037yrV9XTu98ew0Y6POnKJtsODRcWqlGKjLweM1u_
     depends_on:
       - influxdb
