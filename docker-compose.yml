@@ -10,7 +10,8 @@ services:
       - "8084:8084"
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf
-    network_mode: "host"
+    depends_on:
+      - frontend-bh
 #Front-end do projeto, encapsulado em um container node.js oficial, customizado no momento da composição
   frontend-bh:
     image: frontend-bh
@@ -32,11 +33,9 @@ services:
       - "5176:5173"
     depends_on:
       - influxdb
-      - nginx
-    network_mode: "host"
-#Container do InfluxDB 1.8.4 para compatibilidade com a imagem mais recente disponível para Arquitetura Armv7
+#Container do InfluxDB 1.8.10 para compatibilidade com a imagem mais recente disponível para Arquitetura Armv7
   influxdb:
-    image: influxdb:1.8.4
+    image: influxdb:1.8.10
     container_name: influxdb
     restart: unless-stopped
     ports:
@@ -50,8 +49,6 @@ services:
     volumes:
       - influxdb-data:/var/lib/influxdb
       - ./influxdb-init.iql:/docker-entrypoint-initdb.d/init.iql:ro
-    depends_on:
-      - nginx
 #Coordenador MQTT para coleta dos dados
   mosquitto:
     image: eclipse-mosquitto:latest
