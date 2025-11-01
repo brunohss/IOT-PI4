@@ -33,7 +33,7 @@ cd IOT---PI4
 
 2. **Clone o repositório do Front-End**
 ```bash
-git clone -b feat/auth-modv1 https://github.com/damacosta/frontend-bh.git
+git clone -b feat/auth https://github.com/damacosta/frontend-bh.git
 ```
 
 3. Inicialize os serviços com Docker Compose na pasta do repositório
