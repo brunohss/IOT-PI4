@@ -1,4 +1,4 @@
-# IOT – PI4
+# Esp32 IOT Workbench
 
 Controle de ambiente de bancada eletrônica com ESP32‑S3, InfluxDB, Node‑RED, MQTT e dashboard.
 
